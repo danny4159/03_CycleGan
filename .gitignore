@@ -1,0 +1,16 @@
+# 1. 데이터셋 (이미지, json)
+*.jpg
+*.png
+*.json
+
+# 2. pt 파일
+*.pt
+*.pyc
+*.pth
+
+# 3. 폴더
+log/*
+results/*
+
+#무시
+!.gitkeep
