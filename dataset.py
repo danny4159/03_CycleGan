@@ -20,12 +20,18 @@ class Dataset(torch.utils.data.Dataset):
         self.data_type = data_type
         self.nch = nch
 
-        dataA = [f for f in os.listdir(self.data_dir_a) if f.endswith('.jpg')] # dir안에 모든 파일 중 jpg로 끝나는 모든 string을 list로 차곡차곡
+        # dataA = [f for f in os.listdir(self.data_dir_a) if f.endswith('.jpg')] # dir안에 모든 파일 중 jpg로 끝나는 모든 string을 list로 차곡차곡
+        dataA = [f for f in os.listdir(self.data_dir_a) if f.endswith('.png')] # dir안에 모든 파일 중 jpg로 끝나는 모든 string을 list로 차곡차곡
         dataA.sort(key=lambda f: int(''.join(filter(str.isdigit, f))))
 
-        dataB = [f for f in os.listdir(self.data_dir_b) if f.endswith('.jpg')]
+        # dataB = [f for f in os.listdir(self.data_dir_b) if f.endswith('.jpg')]
+        dataB = [f for f in os.listdir(self.data_dir_b) if f.endswith('color.png')]
         dataB.sort(key=lambda f: int(''.join(filter(str.isdigit, f))))
 
+        print("A")
+        print(len(dataA))
+        print("B")
+        print(len(dataB))
         self.names = (dataA, dataB)
 
     def __getitem__(self, index):
@@ -35,6 +41,7 @@ class Dataset(torch.utils.data.Dataset):
 
         dataA = plt.imread(os.path.join(self.data_dir_a, self.names[0][index])).squeeze()
         dataB = plt.imread(os.path.join(self.data_dir_b, self.names[1][index])).squeeze()
+        dataB = dataB[:,:,0:3] # TODO: cityspace 데이터에만 들어가는 코드
 
         if dataA.dtype == np.uint8:
             dataA = dataA / 255.0
