@@ -11,7 +11,6 @@ from torchvision import transforms
 from torch.utils.tensorboard import SummaryWriter
 import matplotlib.pyplot as plt
 
-
 class Train:
     def __init__(self, args):
         self.mode = args.mode
@@ -155,7 +154,7 @@ class Train:
         transform_inv = transforms.Compose([ToNumpy(), Denomalize()])
 
         dataset_train = Dataset(dir_data_train, direction=self.direction, data_type=self.data_type, transform=transform_train)
-        loader_train = torch.utils.data.DataLoader(dataset_train, batch_size=batch_size, shuffle=True, num_workers=8)
+        loader_train = torch.utils.data.DataLoader(dataset_train, batch_size=batch_size, shuffle=True, num_workers=12)
 
         num_train = len(dataset_train)
         num_batch_train = int((num_train / batch_size) + ((num_train % batch_size) != 0))
@@ -168,12 +167,12 @@ class Train:
 
         netD_a = Discriminator(nch_in, nch_ker, norm)
         netD_b = Discriminator(nch_in, nch_ker, norm)
-        
-        init_net(netG_a2b, init_type='normal', init_gain=0.02, gpu_ids=gpu_ids)
-        init_net(netG_b2a, init_type='normal', init_gain=0.02, gpu_ids=gpu_ids)
 
-        init_net(netD_a, init_type='normal', init_gain=0.02, gpu_ids=gpu_ids)
-        init_net(netD_b, init_type='normal', init_gain=0.02, gpu_ids=gpu_ids)
+        netG_a2b = init_net(netG_a2b, init_type='normal', init_gain=0.02, gpu_ids=gpu_ids)
+        netG_b2a = init_net(netG_b2a, init_type='normal', init_gain=0.02, gpu_ids=gpu_ids)
+
+        netD_a = init_net(netD_a, init_type='normal', init_gain=0.02, gpu_ids=gpu_ids)
+        netD_b = init_net(netD_b, init_type='normal', init_gain=0.02, gpu_ids=gpu_ids)
 
         ## setup loss & optimization
         fn_Cycle = nn.L1Loss().to(device)   # L1
@@ -374,7 +373,7 @@ class Train:
 
         dataset_test = Dataset(dir_data_test, data_type=self.data_type, transform=transform_test)
 
-        loader_test = torch.utils.data.DataLoader(dataset_test, batch_size=batch_size, shuffle=False, num_workers=8)
+        loader_test = torch.utils.data.DataLoader(dataset_test, batch_size=batch_size, shuffle=False, num_workers=12)
 
         num_test = len(dataset_test)
 
@@ -386,8 +385,8 @@ class Train:
         netG_a2b = ResNet(nch_in, nch_out, nch_ker, norm, nblk=self.nblk) # Generator부분만 만든다. Discriminator는 아니야.
         netG_b2a = ResNet(nch_in, nch_out, nch_ker, norm, nblk=self.nblk)
 
-        init_net(netG_a2b, init_type='normal', init_gain=0.02, gpu_ids=gpu_ids)
-        init_net(netG_b2a, init_type='normal', init_gain=0.02, gpu_ids=gpu_ids)
+        netG_a2b = init_net(netG_a2b, init_type='normal', init_gain=0.02, gpu_ids=gpu_ids)
+        netG_b2a = init_net(netG_b2a, init_type='normal', init_gain=0.02, gpu_ids=gpu_ids)
 
         ## load from checkpoints
         st_epoch = 0
