@@ -14,7 +14,7 @@ cudnn.fastest = True
 python main.py --mode 'train' --batch_size 8 --dir_data 'datasets' --name_data 'monet2photo'  --dir_checkpoint 'checkpoints' --dir_log 'log' --dir_result 'results' --gpu_ids '1,2'
 python main.py --mode 'test' 
 
-python main.py --mode 'train' --batch_size 1 --dir_data 'datasets' --name_data 'cityspaces'  --dir_checkpoint 'checkpoints' --dir_log 'log' --dir_result 'results' --gpu_ids '0,1,2,3,4,5'
+python main.py --mode 'train' --batch_size 6 --dir_data 'datasets' --name_data 'cityspaces'  --dir_checkpoint 'checkpoints' --dir_log 'log' --dir_result 'results' --gpu_ids '0,1,2,3' --nch_ker 16
 """
 
 
@@ -44,7 +44,7 @@ parser.add_argument('--lr_G', type=float, default=2e-4, dest='lr_G')
 parser.add_argument('--lr_D', type=float, default=2e-4, dest='lr_D')
 
 parser.add_argument('--num_freq_disp', type=int,  default=50, dest='num_freq_disp')
-parser.add_argument('--num_freq_save', type=int,  default=10, dest='num_freq_save')
+parser.add_argument('--num_freq_save', type=int,  default=1, dest='num_freq_save')
 
 parser.add_argument('--lr_policy', type=str, default='linear', choices=['linear', 'step', 'plateau', 'cosine'], dest='lr_policy')
 parser.add_argument('--n_epochs', type=int, default=100, dest='n_epochs')

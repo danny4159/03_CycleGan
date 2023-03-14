@@ -154,7 +154,7 @@ class Train:
         transform_inv = transforms.Compose([ToNumpy(), Denomalize()])
 
         dataset_train = Dataset(dir_data_train, direction=self.direction, data_type=self.data_type, transform=transform_train)
-        loader_train = torch.utils.data.DataLoader(dataset_train, batch_size=batch_size, shuffle=True, num_workers=12)
+        loader_train = torch.utils.data.DataLoader(dataset_train, batch_size=batch_size, shuffle=True, num_workers=8)
 
         num_train = len(dataset_train)
         num_batch_train = int((num_train / batch_size) + ((num_train % batch_size) != 0))
@@ -304,13 +304,14 @@ class Train:
                     loss_I_a_train += [loss_I_a.item()]
                     loss_I_b_train += [loss_I_b.item()]
 
-                print('TRAIN: EPOCH %d: BATCH %04d/%04d: '
-                      'G_a2b: %.4f G_b2a: %.4f D_a: %.4f D_b: %.4f C_a: %.4f C_b: %.4f I_a: %.4f I_b: %.4f'
-                      % (epoch, i, num_batch_train,
-                         mean(loss_G_a2b_train), mean(loss_G_b2a_train),
-                         mean(loss_D_a_train), mean(loss_D_b_train),
-                         mean(loss_C_a_train), mean(loss_C_b_train),
-                         mean(loss_I_a_train), mean(loss_I_b_train)))
+                if(i % 10 == 1): # batch 10개마다 print
+                    print('TRAIN: EPOCH %d: BATCH %04d/%04d: '
+                        'G_a2b: %.4f G_b2a: %.4f D_a: %.4f D_b: %.4f C_a: %.4f C_b: %.4f I_a: %.4f I_b: %.4f'
+                        % (epoch, i, num_batch_train,
+                            mean(loss_G_a2b_train), mean(loss_G_b2a_train),
+                            mean(loss_D_a_train), mean(loss_D_b_train),
+                            mean(loss_C_a_train), mean(loss_C_b_train),
+                            mean(loss_I_a_train), mean(loss_I_b_train)))
 
                 if should(num_freq_disp):
                     ## show output
@@ -373,7 +374,7 @@ class Train:
 
         dataset_test = Dataset(dir_data_test, data_type=self.data_type, transform=transform_test)
 
-        loader_test = torch.utils.data.DataLoader(dataset_test, batch_size=batch_size, shuffle=False, num_workers=12)
+        loader_test = torch.utils.data.DataLoader(dataset_test, batch_size=batch_size, shuffle=False, num_workers=8)
 
         num_test = len(dataset_test)
 
