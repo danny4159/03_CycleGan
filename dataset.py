@@ -22,11 +22,13 @@ class Dataset(torch.utils.data.Dataset):
 
         # dataA = [f for f in os.listdir(self.data_dir_a) if f.endswith('.jpg')] # dir안에 모든 파일 중 jpg로 끝나는 모든 string을 list로 차곡차곡
         dataA = [f for f in os.listdir(self.data_dir_a) if f.endswith('.png')] # dir안에 모든 파일 중 jpg로 끝나는 모든 string을 list로 차곡차곡
-        dataA.sort(key=lambda f: int(''.join(filter(str.isdigit, f))))
+        # dataA.sort(key=lambda f: int(''.join(filter(str.isdigit, f)))) # cityspace데이터셋에서는 sorting을 못해줘
+        dataA.sort()
 
         # dataB = [f for f in os.listdir(self.data_dir_b) if f.endswith('.jpg')]
         dataB = [f for f in os.listdir(self.data_dir_b) if f.endswith('color.png')]
-        dataB.sort(key=lambda f: int(''.join(filter(str.isdigit, f))))
+        # dataB.sort(key=lambda f: int(''.join(filter(str.isdigit, f)))) # cityspace데이터셋에서는 sorting을 못해줘
+        dataB.sort()
 
         print("A")
         print(len(dataA))
