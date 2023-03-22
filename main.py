@@ -22,7 +22,7 @@ python main.py --mode 'train' --batch_size 6 --dir_data 'datasets' --name_data '
 parser = argparse.ArgumentParser(description='Train the CycleGAN network',
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-parser.add_argument('--gpu_ids', default='0,1,2,3', dest='gpu_ids')
+parser.add_argument('--gpu_ids', default='4,5', dest='gpu_ids')
 
 parser.add_argument('--mode', default='train', choices=['train', 'test'], dest='mode')
 parser.add_argument('--train_continue', default='off', choices=['on', 'off'], dest='train_continue')
@@ -59,16 +59,16 @@ parser.add_argument('--wgt_i', type=float, default=5e-1, dest='wgt_i') # TODO: �
 parser.add_argument('--optim', default='adam', choices=['sgd', 'adam', 'rmsprop'], dest='optim')
 parser.add_argument('--beta1', default=0.5, dest='beta1')
 
-parser.add_argument('--ny_in', type=int, default=1024, dest='ny_in') # TODO: 이미지 size
-parser.add_argument('--nx_in', type=int, default=2048, dest='nx_in')
+parser.add_argument('--ny_in', type=int, default=256, dest='ny_in') # TODO: 이미지 size
+parser.add_argument('--nx_in', type=int, default=512, dest='nx_in')
 parser.add_argument('--nch_in', type=int, default=3, dest='nch_in')
 
-parser.add_argument('--ny_load', type=int, default=1044, dest='ny_load')
-parser.add_argument('--nx_load', type=int, default=2088, dest='nx_load')
+parser.add_argument('--ny_load', type=int, default=266, dest='ny_load')
+parser.add_argument('--nx_load', type=int, default=532, dest='nx_load')
 parser.add_argument('--nch_load', type=int, default=3, dest='nch_load')
 
-parser.add_argument('--ny_out', type=int, default=1024, dest='ny_out')
-parser.add_argument('--nx_out', type=int, default=2048, dest='nx_out')
+parser.add_argument('--ny_out', type=int, default=256, dest='ny_out')
+parser.add_argument('--nx_out', type=int, default=512, dest='nx_out')
 parser.add_argument('--nch_out', type=int, default=3, dest='nch_out')
 
 parser.add_argument('--nch_ker', type=int, default=64, dest='nch_ker')

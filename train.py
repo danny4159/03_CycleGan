@@ -83,6 +83,7 @@ class Train:
             ckpt = os.listdir(dir_chck)
             ckpt.sort()
             epoch = int(ckpt[-1].split('epoch')[1].split('.pth')[0]) # 가장 마지막 epoch의 숫자만 return
+            epoch = 171 # TODO: 내가 원하는 epoch을 입력하도록. 아니면 주석처리.
 
         dict_net = torch.load('%s/model_epoch%04d.pth' % (dir_chck, epoch))
 
@@ -154,7 +155,7 @@ class Train:
         transform_inv = transforms.Compose([ToNumpy(), Denomalize()])
 
         dataset_train = Dataset(dir_data_train, direction=self.direction, data_type=self.data_type, transform=transform_train)
-        loader_train = torch.utils.data.DataLoader(dataset_train, batch_size=batch_size, shuffle=True, num_workers=8)
+        loader_train = torch.utils.data.DataLoader(dataset_train, batch_size=batch_size, shuffle=True, num_workers=48)
 
         num_train = len(dataset_train)
         num_batch_train = int((num_train / batch_size) + ((num_train % batch_size) != 0))
@@ -369,12 +370,12 @@ class Train:
 
         dir_data_test = os.path.join(self.dir_data, self.name_data, 'test')
 
-        transform_test = transforms.Compose([Normalize(), ToTensor()])
+        transform_test = transforms.Compose([Normalize(), Rescale((self.ny_in, self.nx_in)), ToTensor()])
         transform_inv = transforms.Compose([ToNumpy(), Denomalize()])
 
         dataset_test = Dataset(dir_data_test, data_type=self.data_type, transform=transform_test)
 
-        loader_test = torch.utils.data.DataLoader(dataset_test, batch_size=batch_size, shuffle=False, num_workers=8)
+        loader_test = torch.utils.data.DataLoader(dataset_test, batch_size=batch_size, shuffle=False, num_workers=48)
 
         num_test = len(dataset_test)
 
