@@ -4,14 +4,7 @@ from skimage import transform
 import matplotlib.pyplot as plt
 import os
 
-
 class Dataset(torch.utils.data.Dataset):
-    """
-    dataset of image files of the form 
-       stuff<number>_trans.pt
-       stuff<number>_density.pt
-    """
-
     def __init__(self, data_dir, direction='A2B', data_type='float32', nch=3, transform=[]):
         self.data_dir_a = data_dir + 'A'
         self.data_dir_b = data_dir + 'B'
@@ -20,14 +13,9 @@ class Dataset(torch.utils.data.Dataset):
         self.data_type = data_type
         self.nch = nch
 
-        # dataA = [f for f in os.listdir(self.data_dir_a) if f.endswith('.jpg')] # dir안에 모든 파일 중 jpg로 끝나는 모든 string을 list로 차곡차곡
-        dataA = [f for f in os.listdir(self.data_dir_a) if f.endswith('.png')] # dir안에 모든 파일 중 jpg로 끝나는 모든 string을 list로 차곡차곡
-        # dataA.sort(key=lambda f: int(''.join(filter(str.isdigit, f)))) # cityspace데이터셋에서는 sorting을 못해줘
+        dataA = [f for f in os.listdir(self.data_dir_a) if f.endswith('.npy')] # dir안에 모든 파일 중 npy로 끝나는 모든 string을 list로 차곡차곡
         dataA.sort()
-
-        # dataB = [f for f in os.listdir(self.data_dir_b) if f.endswith('.jpg')]
-        dataB = [f for f in os.listdir(self.data_dir_b) if f.endswith('color.png')]
-        # dataB.sort(key=lambda f: int(''.join(filter(str.isdigit, f)))) # cityspace데이터셋에서는 sorting을 못해줘
+        dataB = [f for f in os.listdir(self.data_dir_b) if f.endswith('.npy')]
         dataB.sort()
 
         print("A")
@@ -37,27 +25,25 @@ class Dataset(torch.utils.data.Dataset):
         self.names = (dataA, dataB)
 
     def __getitem__(self, index):
+        dataA = np.load(os.path.join(self.data_dir_a, self.names[0][index])).squeeze()
+        dataB = np.load(os.path.join(self.data_dir_b, self.names[1][index])).squeeze()
 
-        # x = np.load(os.path.join(self.data_dir, self.names[0][index]))
-        # y = np.load(os.path.join(self.data_dir, self.names[1][index]))
+        # 비어있는 slice를 catch하기 위해
+        if dataA.max()==0:
+           print("data의 max가 0인 것")
+           print(os.path.join(self.data_dir_a, self.names[0][index]))
+        if dataB.max()==0:
+           print("data의 max가 0인 것")
+           print(os.path.join(self.data_dir_b, self.names[1][index]))
 
-        dataA = plt.imread(os.path.join(self.data_dir_a, self.names[0][index])).squeeze()
-        dataB = plt.imread(os.path.join(self.data_dir_b, self.names[1][index])).squeeze()
-        dataB = dataB[:,:,0:3] # TODO: cityspace 데이터에만 들어가는 코드
-
-        if dataA.dtype == np.uint8:
-            dataA = dataA / 255.0
-
-        if dataB.dtype == np.uint8:
-            dataB = dataB / 255.0
+        # Scale: 0~1
+        dataA = dataA / dataA.max()
+        dataB = dataB / dataB.max()
 
         if len(dataA.shape) == 2:
-            dataA = np.expand_dims(dataA, axis=2)
-            dataA = np.tile(dataA, (1, 1, 3))
+            dataA = np.expand_dims(dataA, axis=2) # 끝에 채널 추가
         if len(dataB.shape) == 2:
             dataB = np.expand_dims(dataB, axis=2)
-            dataB = np.tile(dataB, (1, 1, 3))
-
         if self.direction == 'A2B':
             data = {'dataA': dataA, 'dataB': dataB}
         else:
@@ -69,7 +55,10 @@ class Dataset(torch.utils.data.Dataset):
         return data
 
     def __len__(self):
-        return len(self.names[0]) # A의 크기를 중심으로 따른다. B는 더 적으면 에러. 더 많으면 A만큼만 씀
+        if self.names[0] > self.namse[1]:
+           return len(self.names[1])
+        else:
+           return len(self.names[0])
 
 
 class ToTensor(object):

@@ -83,7 +83,7 @@ class Train:
             ckpt = os.listdir(dir_chck)
             ckpt.sort()
             epoch = int(ckpt[-1].split('epoch')[1].split('.pth')[0]) # 가장 마지막 epoch의 숫자만 return
-            epoch = 171 # TODO: 내가 원하는 epoch을 입력하도록. 아니면 주석처리.
+            # epoch = 171 # TODO: 내가 원하는 epoch을 입력하도록. 아니면 주석처리.
 
         dict_net = torch.load('%s/model_epoch%04d.pth' % (dir_chck, epoch))
 
@@ -155,7 +155,7 @@ class Train:
         transform_inv = transforms.Compose([ToNumpy(), Denomalize()])
 
         dataset_train = Dataset(dir_data_train, direction=self.direction, data_type=self.data_type, transform=transform_train)
-        loader_train = torch.utils.data.DataLoader(dataset_train, batch_size=batch_size, shuffle=True, num_workers=48)
+        loader_train = torch.utils.data.DataLoader(dataset_train, batch_size=batch_size, shuffle=True, num_workers=8)
 
         num_train = len(dataset_train)
         num_batch_train = int((num_train / batch_size) + ((num_train % batch_size) != 0))
@@ -375,7 +375,7 @@ class Train:
 
         dataset_test = Dataset(dir_data_test, data_type=self.data_type, transform=transform_test)
 
-        loader_test = torch.utils.data.DataLoader(dataset_test, batch_size=batch_size, shuffle=False, num_workers=48)
+        loader_test = torch.utils.data.DataLoader(dataset_test, batch_size=batch_size, shuffle=False, num_workers=8)
 
         num_test = len(dataset_test)
 
@@ -430,13 +430,24 @@ class Train:
                                'output_b': "%04d-output_b.png" % name,
                                'recon_a': "%04d-recon_a.png" % name,
                                'recon_b': "%04d-recon_b.png" % name}
+                    
+                    #TODO: 실제 값으로 저장하려면 결과에 실제 데이터의 max()를 곱해주는 작업이 필요. 지금은 0~1 scale
+                    print(input_a[j, :, :, :].squeeze().shape)
+                    # np.save(os.path.join(dir_result_save, fileset['input_a']), input_a[j, :, :, :].squeeze())
+                    # np.save(os.path.join(dir_result_save, fileset['input_b']), input_b[j, :, :, :].squeeze())
+                    # np.save(os.path.join(dir_result_save, fileset['output_a']), output_a[j, :, :, :].squeeze())
+                    # np.save(os.path.join(dir_result_save, fileset['output_b']), output_b[j, :, :, :].squeeze())
+                    # np.save(os.path.join(dir_result_save, fileset['recon_a']), recon_a[j, :, :, :].squeeze())
+                    # np.save(os.path.join(dir_result_save, fileset['recon_b']), recon_b[j, :, :, :].squeeze())
 
-                    plt.imsave(os.path.join(dir_result_save, fileset['input_a']), input_a[j, :, :, :].squeeze())
-                    plt.imsave(os.path.join(dir_result_save, fileset['input_b']), input_b[j, :, :, :].squeeze())
-                    plt.imsave(os.path.join(dir_result_save, fileset['output_a']), output_a[j, :, :, :].squeeze())
-                    plt.imsave(os.path.join(dir_result_save, fileset['output_b']), output_b[j, :, :, :].squeeze())
-                    plt.imsave(os.path.join(dir_result_save, fileset['recon_a']), recon_a[j, :, :, :].squeeze())
-                    plt.imsave(os.path.join(dir_result_save, fileset['recon_b']), recon_b[j, :, :, :].squeeze())
+                    plt.imsave(os.path.join(dir_result_save, fileset['input_a']), input_a[j, :, :, :].squeeze(), cmap="gray")
+                    plt.imsave(os.path.join(dir_result_save, fileset['input_b']), input_b[j, :, :, :].squeeze(), cmap="gray")
+                    plt.imsave(os.path.join(dir_result_save, fileset['output_a']), output_a[j, :, :, :].squeeze(), cmap="gray")
+                    plt.imsave(os.path.join(dir_result_save, fileset['output_b']), output_b[j, :, :, :].squeeze(), cmap="gray")
+                    plt.imsave(os.path.join(dir_result_save, fileset['recon_a']), recon_a[j, :, :, :].squeeze(), cmap="gray")
+                    plt.imsave(os.path.join(dir_result_save, fileset['recon_b']), recon_b[j, :, :, :].squeeze(), cmap="gray")
+                    
+                    
 
                     append_index(dir_result, fileset) # index.html 만들어 image를 띄우는 것. 에러뜬다.
 

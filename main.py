@@ -11,10 +11,15 @@ cudnn.fastest = True
 
 """
 ### 명령어
+
+# monet2photo
 python main.py --mode 'train' --batch_size 8 --dir_data 'datasets' --name_data 'monet2photo'  --dir_checkpoint 'checkpoints' --dir_log 'log' --dir_result 'results' --gpu_ids '1,2'
 python main.py --mode 'test' 
 
-python main.py --mode 'train' --batch_size 6 --dir_data 'datasets' --name_data 'cityspaces'  --dir_checkpoint 'checkpoints' --dir_log 'log' --dir_result 'results' --gpu_ids '0,1,2,3' --nch_ker 16
+# cityspaces
+python main.py --mode 'train' --batch_size 16 --dir_data 'datasets' --name_data 'cityspaces'  --dir_checkpoint 'checkpoints' --dir_log 'log' --dir_result 'results' --gpu_ids '0,1,2,3' --nch_ker 16
+
+python main.py --mode 'train' --batch_size 32 --dir_data 'datasets' --name_data 'valdo(t1_t2)'  --dir_checkpoint 'checkpoints' --dir_log 'log' --dir_result 'results' --gpu_ids '4,7' --nch_ker 64
 """
 
 
@@ -29,7 +34,7 @@ parser.add_argument('--train_continue', default='off', choices=['on', 'off'], de
 
 parser.add_argument('--scope', default='cyclegan', dest='scope')
 parser.add_argument('--norm', type=str, default='inorm', dest='norm')
-parser.add_argument('--name_data', type=str, default='cityspaces', dest='name_data')  # TODO: 데이터셋에 따라 다르게
+parser.add_argument('--name_data', type=str, default='valdo(t1_t2)', dest='name_data')  # TODO: 데이터셋에 따라 다르게
 
 parser.add_argument('--dir_checkpoint', default='./checkpoints', dest='dir_checkpoint')
 parser.add_argument('--dir_log', default='./log', dest='dir_log')
@@ -59,17 +64,17 @@ parser.add_argument('--wgt_i', type=float, default=5e-1, dest='wgt_i') # TODO: �
 parser.add_argument('--optim', default='adam', choices=['sgd', 'adam', 'rmsprop'], dest='optim')
 parser.add_argument('--beta1', default=0.5, dest='beta1')
 
-parser.add_argument('--ny_in', type=int, default=256, dest='ny_in') # TODO: 이미지 size
+parser.add_argument('--ny_in', type=int, default=512, dest='ny_in') # TODO: 이미지 size
 parser.add_argument('--nx_in', type=int, default=512, dest='nx_in')
-parser.add_argument('--nch_in', type=int, default=3, dest='nch_in')
+parser.add_argument('--nch_in', type=int, default=1, dest='nch_in')
 
-parser.add_argument('--ny_load', type=int, default=266, dest='ny_load')
-parser.add_argument('--nx_load', type=int, default=532, dest='nx_load')
-parser.add_argument('--nch_load', type=int, default=3, dest='nch_load')
+parser.add_argument('--ny_load', type=int, default=528, dest='ny_load')
+parser.add_argument('--nx_load', type=int, default=528, dest='nx_load')
+parser.add_argument('--nch_load', type=int, default=1, dest='nch_load')
 
-parser.add_argument('--ny_out', type=int, default=256, dest='ny_out')
+parser.add_argument('--ny_out', type=int, default=512, dest='ny_out')
 parser.add_argument('--nx_out', type=int, default=512, dest='nx_out')
-parser.add_argument('--nch_out', type=int, default=3, dest='nch_out')
+parser.add_argument('--nch_out', type=int, default=1, dest='nch_out')
 
 parser.add_argument('--nch_ker', type=int, default=64, dest='nch_ker')
 
