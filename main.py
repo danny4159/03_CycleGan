@@ -19,7 +19,7 @@ python main.py --mode 'test'
 # cityspaces
 python main.py --mode 'train' --batch_size 16 --dir_data 'datasets' --name_data 'cityspaces'  --dir_checkpoint 'checkpoints' --dir_log 'log' --dir_result 'results' --gpu_ids '0,1,2,3' --nch_ker 16
 
-python main.py --mode 'train' --batch_size 32 --dir_data 'datasets' --name_data 'valdo(t1_t2)'  --dir_checkpoint 'checkpoints' --dir_log 'log' --dir_result 'results' --gpu_ids '4,7' --nch_ker 64
+python main.py --mode 'train' --batch_size 32 --dir_data 'datasets' --name_data 'valdo_t1_t2'  --dir_checkpoint 'checkpoints' --dir_log 'log' --dir_result 'results' --gpu_ids '4,7' --nch_ker 64
 """
 
 

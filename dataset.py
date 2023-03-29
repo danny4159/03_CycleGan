@@ -55,7 +55,7 @@ class Dataset(torch.utils.data.Dataset):
         return data
 
     def __len__(self):
-        if self.names[0] > self.namse[1]:
+        if self.names[0] > self.names[1]:
            return len(self.names[1])
         else:
            return len(self.names[0])
